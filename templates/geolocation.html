@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="logout">
+<a class="btn btn-primary logout-btn" href="{% url 'logout' %}">Log out</a>
+</div>
+<div class="logo">
+    <img src={% static "images/logo.png" %}>
+</div>
+   
+<button class="btn btn-primary" id="loading" type="button" disabled>
+    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    ... Loading ...
+</button>
+<div id="messages">
+    {% if messages %}
+        {% for message in messages %}
+            <section class="alert {{ message.tags }}">
+            {{message}}
+            </section>
+        {% endfor %}
+    {% endif %}
+</div>
+<div class="container">
+    
+    <div class="geolocation container">
+        <h2> Gerar Pontos </h2>
+        <h5> latitude e longitude</h5>
+        <form class="form-control" action="{% url 'generate-points' %}" method="POST">
+            {%csrf_token%}
+            <label for="latitude">latitude</label>
+            <input type="" class="form-control" name="latitude">
+            <label for="longitude">longitude</label>
+            <input type="" class="form-control" name="longitude">
+            <label for="radius">raio</label>
+            <input type="" class="form-control" name="radius">
+            <label for="quantity">quantidade de pontos</label>
+            <input type="" class="form-control" name="quantity">
+            <input type="checkbox" id="romaneio" name="romaneio" value=True>
+            <label for="romaneio"> Com Romaneio</label><br>
+            <input type="radio" id="csv" name="file-type" value="csv" checked>
+            <label for="romaneio"> csv</label><br>
+            <input type="radio" id="excel" name="file-type" value="excel">
+            <label for="romaneio"> excel </label><br>
+            
+            <button class = "btn btn-primary create-file"type="submit" onclick="showLoadingBar(' Gerando Pontos')">Gerar pontos</button>
+            
+        </form>
+    </div>
+    
+    <div class="find-address container">
+        <h2> Localizar Endereços</h2>
+        <h5> latitude/longitude nas colunas A/B</h5>
+        
+        <form class="form-control" action="{% url 'address-from-geolocation' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{upload_file_form}}
+            <button class="btn btn-primary create-file" type="submit" onclick="showLoadingBar(' Localizando Endereços')">Localizar endereços </button>
+        </form>
+    </div>
+    
+    <div class="find-geolocation container">
+        <h2> Localizar Lat/Long</h2>
+        <h5> Upload arquivo Modelo EE</h5>
+        <form class="form-control" action="{% url 'geolocation-from-address' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{upload_file_form}}
+            <button class = "btn btn-primary create-file"type="submit" onclick="showLoadingBar(' Gerando Geolocalizações')">Localizar geolocalização</button>
+            
+        </form>
+    </div>
+    
+    <script>
+        function showLoadingBar(msg){
+            
+            document.getElementById("loading").style.display = 'flex';
+            document.getElementById("loading").innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' + msg;
+            
+            }
+        
+        
+    </script>
+{% endblock %}
+

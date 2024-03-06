@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="logo">
+    <img src={% static "images/logo.png" %}>
+</div>
+<div class='login-container'>
+    <div class="form-control">
+        <form action="{% url 'login' %}" method='POST'>
+            {% csrf_token %} 
+
+            <input type="username" class="form-control form-field" placeholder="username" name="username">
+            <input type="password" class="form-control form-field" placeholder="password" name="password">
+            <button class="btn btn-primary btn-login"type='submit'>Login</button>
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}
